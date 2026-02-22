@@ -1,8 +1,3 @@
-"""
-JOUR 2 — Visualisation de données Multi-Graphiques
-Jeu de données : Iris | Bibliothèques : matplotlib, seaborn, numpy, pandas
-"""
-
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -11,15 +6,15 @@ import matplotlib.patches as mpatches
 from matplotlib.animation import FuncAnimation
 import seaborn as sns
 
-# ── 1. Chargement des données (Kaggle — uciml/iris) ──────────────────────────
+# Data uploading
 df = pd.read_csv('Iris.csv')
 
-# Nettoyer : supprimer la colonne Id, renommer les colonnes, simplifier les espèces
+# Clean : delete colums ID, rename columms, simplify species
 df.drop(columns='Id', inplace=True)
 df.columns = ['sepal_length', 'sepal_width', 'petal_length', 'petal_width', 'species']
 df['species'] = df['species'].str.replace('Iris-', '', regex=False)  # "Iris-setosa" → "setosa"
 
-# ── 2. Statistiques descriptives ─────────────────────────────────────────────
+# Descriptive Stats
 print("=" * 60)
 print("         STATISTIQUES DESCRIPTIVES — IRIS")
 print("=" * 60)
@@ -33,7 +28,7 @@ stats.columns = ['_'.join(c) if isinstance(c, tuple) else c for c in stats.colum
 print(stats.to_string())
 print()
 
-# Stats globales
+# Global Stats
 print("─" * 60)
 print("Statistiques globales (toutes espèces confondues) :")
 for col in ['sepal_length', 'sepal_width', 'petal_length', 'petal_width']:
@@ -42,7 +37,7 @@ for col in ['sepal_length', 'sepal_width', 'petal_length', 'petal_width']:
           f"  Q1={df[col].quantile(0.25):.2f}  Q3={df[col].quantile(0.75):.2f}")
 print("=" * 60)
 
-# ── 3. Palette & style ────────────────────────────────────────────────────────
+# Style Palette
 PALETTE = {'setosa': '#E63946', 'versicolor': '#457B9D', 'virginica': '#2A9D8F'}
 plt.rcParams.update({
     'font.family': 'DejaVu Sans',
@@ -58,7 +53,7 @@ plt.rcParams.update({
     'grid.linewidth': 0.5,
 })
 
-# ── 4. Tableau de bord statique (2 × 2) ──────────────────────────────────────
+# Static Dashboard (2 × 2)
 fig = plt.figure(figsize=(16, 12), constrained_layout=True)
 fig.patch.set_facecolor('#0F0F1A')
 
@@ -67,7 +62,7 @@ fig.suptitle('🌸  Tableau de Bord Multi-Graphiques — Iris Dataset',
 
 gs = gridspec.GridSpec(2, 2, figure=fig, hspace=0.35, wspace=0.3)
 
-# ── 4a. Histogramme (sepal_length par espèce) ────────────────────────────────
+# Histogram (sepal_length by specie)
 ax1 = fig.add_subplot(gs[0, 0])
 for sp, color in PALETTE.items():
     ax1.hist(df[df['species'] == sp]['sepal_length'],
@@ -78,7 +73,7 @@ ax1.set_ylabel('Fréquence')
 ax1.legend(framealpha=0.15)
 ax1.grid(True, axis='y')
 
-# Annoter la moyenne globale
+# Note the global average
 mean_sl = df['sepal_length'].mean()
 ax1.axvline(mean_sl, color='#FFD166', linestyle='--', linewidth=1.5)
 ax1.annotate(f'Moy. = {mean_sl:.2f}', xy=(mean_sl, ax1.get_ylim()[1] * 0.85),
@@ -86,13 +81,13 @@ ax1.annotate(f'Moy. = {mean_sl:.2f}', xy=(mean_sl, ax1.get_ylim()[1] * 0.85),
              color='#FFD166', fontsize=8,
              arrowprops=dict(arrowstyle='->', color='#FFD166', lw=1))
 
-# ── 4b. Scatter plot avec régression ─────────────────────────────────────────
+# Scatter plot with regression
 ax2 = fig.add_subplot(gs[0, 1])
 for sp, color in PALETTE.items():
     sub = df[df['species'] == sp]
     ax2.scatter(sub['petal_length'], sub['petal_width'],
                 color=color, alpha=0.8, s=50, label=sp, zorder=3)
-    # Régression linéaire par espèce
+    # Linear regression by species
     m, b = np.polyfit(sub['petal_length'], sub['petal_width'], 1)
     x_line = np.linspace(sub['petal_length'].min(), sub['petal_length'].max(), 50)
     ax2.plot(x_line, m * x_line + b, color=color, linewidth=1.5, linestyle='--', alpha=0.7)
@@ -103,7 +98,7 @@ ax2.set_ylabel('Largeur du pétale (cm)')
 ax2.legend(framealpha=0.15)
 ax2.grid(True)
 
-# ── 4c. Heatmap de corrélation ────────────────────────────────────────────────
+# Correlation Heatmap
 ax3 = fig.add_subplot(gs[1, 0])
 corr = df.drop(columns='species').corr()
 mask = np.triu(np.ones_like(corr, dtype=bool), k=1)
@@ -115,7 +110,7 @@ sns.heatmap(corr, ax=ax3, annot=True, fmt='.2f',
             cbar_kws={'shrink': 0.8, 'label': 'Corrélation'})
 ax3.set_title('Heatmap de Corrélation', fontweight='bold', pad=10)
 
-# Boxplot (distributions par variable)
+# Boxplot (distribution by variable)
 ax4 = fig.add_subplot(gs[1, 1])
 features = ['sepal_length', 'sepal_width', 'petal_length', 'petal_width']
 feat_labels = ['Sép. L', 'Sép. l', 'Pét. L', 'Pét. l']
@@ -145,9 +140,9 @@ ax4.legend(handles=patches, framealpha=0.15)
 
 plt.savefig('/mnt/user-data/outputs/jour2_dashboard.png',
             dpi=150, bbox_inches='tight', facecolor='#0F0F1A')
-print("Dashboard statique sauvegardé : Jour2 Dashboard.png")
+print("Dashboard statique sauvegardé : Jour 2 Dashboard.png")
 
-# Animation : courbe animée (petal_length moyen par espèce)
+# Animation : animated  (petal_length moyen by species)
 fig_anim, ax_anim = plt.subplots(figsize=(9, 5))
 fig_anim.patch.set_facecolor('#0F0F1A')
 ax_anim.set_facecolor('#161625')
@@ -187,7 +182,7 @@ def animate(frame):
 ani = FuncAnimation(fig_anim, animate, frames=50, interval=80, blit=True)
 ani.save('/mnt/user-data/outputs/jour2_animation.gif',
          writer='pillow', dpi=100, fps=15)
-print("Animation sauvegardée : Jour2 Animation.gif")
+print("Animation sauvegardée : Jour 2 Animation.gif")
 
 plt.show()
-print("\nJour 2 terminé avec succès !")
+
