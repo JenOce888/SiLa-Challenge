@@ -1,0 +1,85 @@
+##  Description
+
+Un simulateur de **Texas Hold'em Poker** entièrement jouable, développé en Python à l'aide de la programmation orientée objet (POO). Jouez contre des bots dans votre terminal, avec affichage des cartes en ASCII et calcul en temps réel de la probabilité de gain selon la méthode Monte Carlo.
+
+## Caractéristiques
+
+- **Boucle de jeu Texas Hold'em complète** — Pré-flop → Flop → Turn → River → Abattage
+- **Affichage des cartes en ASCII** dans le terminal
+- **IA des bots** — les bots évaluent la force de leur main et prennent des décisions automatiquement
+- **Simulation Monte Carlo** — calcule votre probabilité de gain en temps réel
+- **Jouez contre 1 à 3 bots** — vous choisissez le nombre d'adversaires
+- **Système de blinds** — Small Blind & Big Blind appliqués à chaque tour
+- **Toutes les actions prises en charge** — Check, Call, Raise, Fold, All-In
+
+## Structure du projet
+
+poker_texas_holdem_en.py
+│
+├── class Card          → Représente une seule carte à jouer
+├── class Deck          → Jeu de 52 cartes avec mélange et distribution
+├── class Hand          → Évalue et classe les mains de 5 à 7 cartes
+├── classe Player        → Joueur humain ou bot avec gestion des jetons
+├── classe PokerGame     → Moteur de jeu complet (tours, paris, blinds)
+│
+├── monte_carlo()       → Probabilité de gagner via une simulation aléatoire
+└── main()              → Menu et point d'entrée du jeu
+
+## Classement des mains (de la meilleure à la pire)
+
+| Rang | Main | Exemple |
+|------|------|---------|
+| 10 | Quinte flush royale | A K Q J 10 ♠ |
+| 9 | Quinte flush | 7 8 9 10 J ♥ |
+| 8 | Carré | 9♠ 9♥ 9♦ 9♣ |
+| 7 | Full | K K K + 5 5 |
+| 6 | Couleur | 5 cartes de la même couleur |
+| 5 | Quinte | 5-6-7-8-9 n'importe quelle  costumes |
+| 4 | Brelan | Q Q Q |
+| 3 | Double paire | J J + 4 4 |
+| 2 | Paire | 8 8 |
+| 1 | Carte haute | Meilleure carte unique |
+
+---
+
+## Monte Carlo — Comment ça marche
+
+À chaque décision de mise, le programme effectue **500 simulations** :
+
+1. Prenez les cartes connues (votre main + les cartes communes)
+2. Remplissez au hasard les cartes restantes
+3. Simulez les adversaires avec des mains aléatoires
+4. Vérifiez si vous gagnez
+5. Répétez 500 fois → comptez les gains / 500 = votre pourcentage de gains
+
+
+**Comment l'utiliser :**
+| Pourcentage de gains | Action suggérée |
+|-------|-----------------|
+| > 60 % | Misez / relancez en toute confiance  |
+| 40–60 % | Suivez prudemment  |
+| < 40 % | Envisagez de vous coucher  |
+
+## Commandes du jeu
+
+| Touche | Action | Quand disponible |
+|-----|--------|----------------|
+| `c` | Passer | Pas de mise à suivre |
+| `s` | Suivre | Quelqu'un a misé |
+| `r` | Relancer | À tout moment |
+| `f` | Se coucher | À tout moment |
+| `a` | Tout miser | À tout moment |
+
+## Concepts utilisés
+
+| Concept | Où |
+|---------|-------|
+| OOP — Classes et objets | `Card`, `Deck`, `Hand`, `Player`, `PokerGame` |
+| Constructeur `__init__` | Chaque classe |
+| `__repr__`, `__eq__`, `__lt__` | `Card`, `Hand` (méthodes dunder) |
+| Compréhensions de listes | `Deck.__init__`, `monte_carlo()` |
+| `Counter` de `collections` | `Hand._score_5cards()` |
+| `combinations` de `itertools` | `Hand._evaluate()` |
+| `random.shuffle` | `Deck.shuffle()`, `monte_carlo()` |
+| Comparaison de tuples | Système de notation des mains |
+| Probabilités / Statistiques | Simulation Monte Carlo |
