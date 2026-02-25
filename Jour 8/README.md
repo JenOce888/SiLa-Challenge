@@ -71,9 +71,9 @@ Le script génère un tableau de bord à 5 panneaux enregistré sous le nom `day
 ### 8. Exportation du modèle — Joblib
 ```python
 # Enregistrer
-joblib.dump(final_model, « day8_model_final.pkl »)
+joblib.dump(final_model, « Modèle_Final.pkl »)
 # Charger et prédire
-model = joblib.load(« day8_model_final.pkl »)
+model = joblib.load(« Modèle_Final.pkl »)
 predictions = model.predict(X_new)
 ```
 ---
