@@ -1,5 +1,3 @@
----
-
 ## Fonctionnalités
 
 - **Grilles** 3×3, 4×4 et 5×5 avec condition de victoire adaptée (K à la suite)
@@ -25,7 +23,7 @@
 ## Structure du code
 
 ```
-morpion_ia.py
+Jeu_Morpion_IA_Minimax.py
 │
 ├── Board          → Logique de la grille, détection de victoire (fenêtre K)
 ├── get_threats    → Détection des menaces ouvertes (utilisée par l'UI et l'IA)
@@ -36,5 +34,6 @@ morpion_ia.py
 ├── Button         → Composant UI réutilisable
 └── Game           → Boucle principale, rendu, gestion des événements
 ```
+
 
 ---
