@@ -1,1 +1,40 @@
+---
 
+## Fonctionnalités
+
+- **Grilles** 3×3, 4×4 et 5×5 avec condition de victoire adaptée (K à la suite)
+- **IA Minimax** avec élagage Alpha-Bêta et heuristique consciente des menaces
+- **3 niveaux de difficulté** : Easy / Medium / Impossible
+- **Mode 2 joueurs** local
+- **Détection des menaces** : les cases dangereuses sont surlignées en orange
+- **Compteur de score** persistant entre les parties
+- **Notation algébrique** : chaque partie est sauvegardée dans `/games/`
+
+---
+
+## Règles de victoire
+
+| Grille | K nécessaire |
+|--------|-------------|
+| 3×3    | 3 à la suite |
+| 4×4    | 4 à la suite |
+| 5×5    | 4 à la suite |
+
+---
+
+## Structure du code
+
+```
+morpion_ia.py
+│
+├── Board          → Logique de la grille, détection de victoire (fenêtre K)
+├── get_threats    → Détection des menaces ouvertes (utilisée par l'UI et l'IA)
+├── Minimax        → IA avec Alpha-Bêta, ordering des coups, heuristique
+├── GameRecorder   → Sauvegarde des parties en notation algébrique
+├── ScoreBoard     → Compteur de score multi-parties
+├── Animation      → Particules, fade-in, flash de victoire
+├── Button         → Composant UI réutilisable
+└── Game           → Boucle principale, rendu, gestion des événements
+```
+
+---
